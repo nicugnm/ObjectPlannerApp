@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "66455656947",
+    "project_id": "objectplannerapp",
+    "storage_bucket": "objectplannerapp.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:66455656947:android:acb28fdd8e13f92aebda86",
+        "android_client_info": {
+          "package_name": "ro.nicolaemariusghergu.objectplannerapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "66455656947-hnhbvf1m4atdggvre234ro6906s812n3.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "ro.nicolaemariusghergu.objectplannerapp",
+            "certificate_hash": "38a2bd2ff22b84360f75526fb2990b82fd9ee4e7"
+          }
+        },
+        {
+          "client_id": "66455656947-g34noq8op2d73fek19hadi5n4risvi5g.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBbIt2lEIaOS8FyVovhQYMCGNNRm4_9bMw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "66455656947-g34noq8op2d73fek19hadi5n4risvi5g.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

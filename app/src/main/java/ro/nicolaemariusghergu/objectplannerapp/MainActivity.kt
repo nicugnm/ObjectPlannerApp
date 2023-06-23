@@ -1,61 +1,77 @@
 package ro.nicolaemariusghergu.objectplannerapp
 
-import android.os.Bundle
-import com.google.android.material.snackbar.Snackbar
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.WindowCompat
-import androidx.navigation.findNavController
-import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.navigateUp
-import androidx.navigation.ui.setupActionBarWithNavController
-import android.view.Menu
-import android.view.MenuItem
-import ro.nicolaemariusghergu.objectplannerapp.databinding.ActivityMainBinding
+import android.os.Bundle
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.firebase.auth.FirebaseAuth
+
+
+import android.content.Intent
+import android.widget.Button
+import android.widget.TextView
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInClient
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 
 class MainActivity : AppCompatActivity() {
 
-    private lateinit var appBarConfiguration: AppBarConfiguration
-    private lateinit var binding: ActivityMainBinding
+    private lateinit var mGoogleSignInClient: GoogleSignInClient
+    private lateinit var mAuth: FirebaseAuth
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        WindowCompat.setDecorFitsSystemWindows(window, false)
         super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
 
-        binding = ActivityMainBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+        mAuth = FirebaseAuth.getInstance()
 
-        setSupportActionBar(binding.toolbar)
 
-        val navController = findNavController(R.id.nav_host_fragment_content_main)
-        appBarConfiguration = AppBarConfiguration(navController.graph)
-        setupActionBarWithNavController(navController, appBarConfiguration)
+        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+            .requestIdToken(getString(R.string.default_web_client_id))
+            .requestEmail()
+            .build()
 
-        binding.fab.setOnClickListener { view ->
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                .setAnchorView(R.id.fab)
-                .setAction("Action", null).show()
+        mGoogleSignInClient = GoogleSignIn.getClient(this, gso)
+
+        val textView = findViewById<TextView>(R.id.name)
+
+        val auth = Firebase.auth
+        val user = auth.currentUser
+
+        if (user != null) {
+            val userName = user.displayName
+            textView.text = "Welcome, " + userName
+        } else {
+            // not sign in
         }
-    }
 
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        menuInflater.inflate(R.menu.menu_main, menu)
-        return true
-    }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        return when (item.itemId) {
-            R.id.action_settings -> true
-            else -> super.onOptionsItemSelected(item)
+        val activitiesButton = findViewById<Button>(R.id.activities_button)
+        activitiesButton.setOnClickListener {
+            activitiesActivity()
         }
+
+        val sign_out_button = findViewById<Button>(R.id.logout_button)
+        sign_out_button.setOnClickListener {
+            signOutAndStartSignInActivity()
+        }
+
     }
 
-    override fun onSupportNavigateUp(): Boolean {
-        val navController = findNavController(R.id.nav_host_fragment_content_main)
-        return navController.navigateUp(appBarConfiguration)
-                || super.onSupportNavigateUp()
+    private fun activitiesActivity() {
+        val intent = Intent(this@MainActivity, Activities::class.java)
+        startActivity(intent)
+        finish()
+    }
+
+
+    private fun signOutAndStartSignInActivity() {
+        mAuth.signOut()
+
+        mGoogleSignInClient.signOut().addOnCompleteListener(this) {
+            val intent = Intent(this@MainActivity, SignInActivity::class.java)
+            startActivity(intent)
+            finish()
+        }
     }
 }
